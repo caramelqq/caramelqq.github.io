@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="/js/velocity.js"></script>
+        <script src="/js/solver.js"></script>
+        <link rel="stylesheet" href="/css/style.css" />  
+        
+        <!-- Bootstrap imports-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        
+        <title>Fluids</title>
+    </head>
+    
+    <body>
+        <div id="inputs">
+            <label for="mach">Mach Number:</label>
+            <input id="mach" type="text" value="1.4" />
+            <label for="alpha">Angle of Attack (deg):</label>
+            <input id="alpha" type="text" value="1" />
+        </div>
+        <div id="buttons">
+            <button id="solve" onclick="calculate()">Calculate</button>
+        </div>
+        <div class="collapsable" data-toggle="collapse" id="dataContainer">
+            <div id="data"></div>
+        </div>
+        
+        <div id="source">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                      <a data-toggle="collapse" href="#collapse1">Methodology</a>
+                  </h4>
+              </div>
+              <div id="collapse1" class="panel-collapse collapse">
+                  <div class="panel-body">
+                      For EAE 126 - In dedication to the 1 billion hours spent in the CAE lab in Bainer Hall with Obdulio, Alex, Edmund, and Melinda<br>
+                      Stable and Entropy Satisfying Approximations for Transonic Flow Calculations<br> 
+                      By Bjorn Engquist* and Stanley Osher**<br>
+                      MATHEMATICS OF COMPUTATION, VOLUME 34, NUMBER 149<br>
+                      JANUARY 1980, PAGES 45-75
+                  </div>
+              </div>
+          </div>
+        </div>
+    </body>
+</html>
