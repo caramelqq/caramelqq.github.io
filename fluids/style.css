@@ -1,0 +1,19 @@
+body
+{
+    font-family: Verdana;
+    text-align: center;
+}
+
+#buttons
+{
+    margin: 10px;
+}
+
+#data
+{
+    position: relative;
+    width: 800px;
+    height: 800px;
+    left: 50%;
+    margin-left: -400px;
+}
