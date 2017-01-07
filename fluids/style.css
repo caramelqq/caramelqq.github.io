@@ -4,9 +4,13 @@ body
     text-align: center;
 }
 
-#title
+.title
 {
     margin: 20px;
+}
+
+#canvas {
+    border: 1px solid black;
 }
 
 #buttons
@@ -19,6 +23,5 @@ body
     position: relative;
     width: 800px;
     height: 800px;
-    left: 50%;
-    margin-left: -400px;
+    margin: auto;
 }

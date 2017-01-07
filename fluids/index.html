@@ -2,9 +2,11 @@
 
 <html>
     <head>
+        <meta charset="utf-8" /> 
+        
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-        <script src="/fluids/velocity.js"></script>
-        <script src="/fluids/solver.js"></script>
+        <script src="/fluids/velocity.js" defer></script>
+        <script src="/fluids/solver.js" defer></script>
         <link rel="stylesheet" href="/fluids/style.css" />  
         
         <!-- Bootstrap imports-->
@@ -16,24 +18,31 @@
     </head>
     
     <body>
-        <div id="title">
-            <h1>Solving fluid velocity contours over a thin airfoil</h1>
-            <div class="dedication">UC Davis EAE 126, Spring 2013 - In dedication to the countless hours spent in the CAE lab in Bainer Hall with Obdulio, Alex, Edmund, and Melinda</div>
-        </div>
-        <div id="inputs">
-            <label for="mach">Mach Number:</label>
-            <input id="mach" type="text" value="1.4" />
-            <label for="alpha">Angle of Attack (deg):</label>
-            <input id="alpha" type="text" value="1" />
-        </div>
-        <div id="buttons">
-            <button id="solve" onclick="calculate()">Calculate</button>
-        </div>
-        <div class="collapsable" data-toggle="collapse" id="dataContainer">
+        <div id="plots">
+            <div class="title">
+                <h1>Solving fluid velocity contours over a thin airfoil</h1>
+                <div class="dedication">UC Davis EAE 126, Spring 2013 - In dedication to the countless hours spent in the CAE lab in Bainer Hall with Obdulio, Alex, Edmund, and Melinda</div>
+            </div>
+            <div id="inputs">
+                <label for="mach">Mach Number:</label>
+                <input id="mach" type="text" value="1.4" />
+                <label for="alpha">Angle of Attack (deg):</label>
+                <input id="alpha" type="text" value="1" />
+            </div>
+            <div id="buttons">
+                <p>Warning: Might take a while for solver to finish, especially subsonic (M<1) flow</p>
+                <button id="solve" onclick="calculate();">Calculate</button>
+            </div>
             <div id="data"></div>
         </div>
-
-        <div id="source">
+        
+        <div id="flow">
+            <h3>Flow Animation</h3>
+            <!--button id="init" onclick="init();">Animate!</button-->
+            <canvas id="canvas" width="800px" height="500px">Your browser does not support HTML5 Canvas :(</canvas>
+        </div>
+        
+        <div id="method">
           <div class="panel panel-default">
               <div class="panel-heading">
                   <h4 class="panel-title">

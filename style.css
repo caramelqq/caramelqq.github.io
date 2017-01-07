@@ -1,26 +1,44 @@
- 	body
+body
 {
 	font-family: sans-serif;
-	font-size: 16;
-	padding-left: 5%;
-	padding-right: 5%;
+	font-size: 12pt;
+	text-align: center;
 }
 
-table
+.resume-container{
+	width: 810px;
+	margin: auto;
+}
+
+body .resume-container table
 {
-	width: 100%;
-	padding-bottom: 50px;
+	width: 800px;
+	margin: auto;
 }
 
-table th
+body .resume-container table th
 {
 	text-align: left;
 }
 
 .section-name
 {
-	text-align: center;
-	font-size: 18;
+	text-align: left;
+	font-weight: bold;
+	border-bottom: 1px solid black;
+	font-size: 20px;
+}
+
+.table-right
+{
+	width: 150px;
+	text-align: right;
+}
+
+.table-left
+{
+	width: 650px;
+	text-align: left;
 }
 
 .sections
@@ -28,44 +46,13 @@ table th
 	padding-bottom: 15px;
 }
 
-.border
-{
-	border-top: 1px solid black;
-}
-
-.year
-{
-	text-align: right;
+.subhead {
 	font-weight: bold;
 }
 
-.place
+.list-skill
 {
+	width: 100%;
 	text-align: left;
-	font-weight: bold;
-}
-
-.list-bottom
-{
 	padding-bottom: 10px;
-}
-
-.indented
-{
-  margin-left: 15px;
-}
-
-#portrait-container img
-{
-	position: relative;
-	width: 200px;
-	height: auto;
-	left: 50%;
-	margin-left: -100px;
-	border-radius: 100px;
-}
-#contact
-{
-	font-family: sans-serif;
-	text-align: center;
 }
