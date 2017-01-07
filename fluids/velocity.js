@@ -11,10 +11,7 @@ function calculate(){
     var a = document.getElementById("mach").value;
     var b = document.getElementById("alpha").value;
     calculateU(a, b);
-    document.getElementById("buttons").innerHTML = "<button id=\"display\" onclick=\"plot()\">Display</button>";
-}
-
-function plot() {
+    
     for(var j = 0; j < 100; ++j)
     {
         uu[j] = [];
@@ -24,13 +21,14 @@ function plot() {
         for(var j = 0; j < 100; ++j)
         {
             uu[j][i] = u[i][j];
-            //if(Math.abs(uu[j][i]) < 0.00001)
-            //{
-            //    uu[j][i] = 0;
-            //}
         }
     }
-    
+	normalizeUU();
+	
+    document.getElementById("buttons").innerHTML = "<button id=\"display\" onclick=\"plot()\">Display</button>";
+}
+
+function plot() {
     var data = [ {
 		    z: uu,
 		    x: x,
@@ -56,7 +54,6 @@ function plot() {
     };
     document.getElementById("buttons").innerHTML = "<button id=\"solve\" onclick=\"calculate()\">Calculate</button>";
     Plotly.newPlot("data", data, layout);
-	normalizeUU();
 }
 
 //~~~~~~~~~~~~~~~Begin Canvas Functions
@@ -128,12 +125,6 @@ Point.prototype.update = function() {
 	this.pointU = uu[y.length - 1 - Math.floor(this.pointY)][Math.floor(this.pointX)];
 	this.pointX += this.pointU;
 	this.pointColor = 240 - this.pointU/0.25*360*2/3;
-	
-	/*
-	if(this.pointX > x.length) {
-		this.pointX = 0;
-		this.pointU = uu[y.length - 1 - Math.floor(this.pointY)][0];
-	}*/
 }
 
 function createPoints() {
@@ -146,19 +137,23 @@ function createPoints() {
     }
 }
 
-function resetColumn(col) {
-	for(var j = 0; j < points.length; ++j) {
-		points[j][col].pointX = 0;
-		points[j][col].pointU = uu[y.length - 1 - Math.floor(points[j][col].pointY)][0];
-	}
-}
-
 canvas.addEventListener("click", function(e) {
-	if(points.length === 0) {
-		init();
+	if(uu.length === 0) {
+		drawError();
 	}
-	run = !run;
+	else if(points.length === 0) {
+		init();
+		run = !run;
+	} else {
+		run = !run;
+	}
 });
+
+function drawError() {
+	ctx.font = "48px sans-serif"
+	ctx.fillText("Click calculate before running the", 50, 100);
+	ctx.fillText(" animation.", 300, 170);
+}
 
 function draw() {
 	if(run == true) {
@@ -178,17 +173,10 @@ function draw() {
 	        for(var i = 0; i < points[j].length; i++) {
 				//update position
 				points[j][i].update();
+				
 				//determine and count updated points out of bounds
 				if(isNaN(points[j][i].pointX) && i > 80) {
 					points[j].pop();
-					/*
-					count[i] += 1;
-					//if all points in a column are OoB, move back to the left
-					if(count[i] === points.length) {
-						resetColumn(i);
-						count[i] = 0;
-					}
-					*/
 				} else {
 	            	points[j][i].draw(ctx);
 				}
