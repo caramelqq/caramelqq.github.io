@@ -1,7 +1,3 @@
-//calculate u
-//plot U as contour as background image
-//plot points and loop
-
 var u = [];    
 var uu = [];
 var x = [];

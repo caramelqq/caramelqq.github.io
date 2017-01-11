@@ -50,7 +50,6 @@ function calculateU(airfoil, M_inf, alpha){
 	} else if (airfoil === 'arc') {
 		var af_coords = jk_af(0, 0.1, n_af);
 		solve_af_dydx(af_coords.X_af, af_coords.Y_af, nx_le, nx_te, dydx_u, dydx_l);
-		console.log()
 	} else if (airfoil === 'joukowski') {
 		var af_coords = jk_af(0.1, 0.1, n_af);
 		solve_af_dydx(af_coords.X_af, af_coords.Y_af, nx_le, nx_te, dydx_u, dydx_l);
@@ -730,66 +729,3 @@ function jk_af(eps,mu,n_af) {
 
 	return {X_af, Y_af};
 }
-/*
-
-//AIRFOIL COORDINATE GENERATION STANDALONE FUNCTIONS
-
-
-function biconvex () {
-	var tau = 0.1;
-	var Y_af = [];
-	//solve upper surface Y
-	for(var i = nx_le; i < nx_te; ++i) {
-		Y_af[i] = 2*tau*x[i] - 2*tau*Math.pow(x[i], 2);
-		//dydx_l[i] = -(2*tau*X[i] - 2*tau*Math.pow(X[i], 2));
-	}
-	
-	//solve dx/dy 
-	//start point - forward difference
-	dydx_u[nx_le] = (Y_af[nx_le+1]-Y_af[nx_le])/dx;
-	dydx_l[nx_le] = -(Y_af[nx_le+1]-Y_af[nx_le])/dx;
-	//general case - central difference
-	for(var i = nx_le+1; i < nx_te-1; ++i) {
-		dydx_u[i] = (Y_af[i+1]-Y_af[i-1])/(2*dx);
-		dydx_l[i] = -(Y_af[i+1]-Y_af[i-1])/(2*dx);
-	}	
-	//end point - backward difference
-	dydx_u[nx_te-1] = (Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
-	dydx_l[nx_te-1] = -(Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
-}
-
-function naca() {
-	var C = 1;
-	var tau = 0.1;
-	var Y_af = [];
-	for(var i = nx_le; i < nx_te; ++i) {
-		Y_af[i] = 10*tau*C*(0.2969*Math.sqrt(x[i]/C)-0.126*(x[i]/C)-0.3537*Math.pow((x[i]/C),2)+0.2843*Math.pow((x[i]/C),3)-0.1015*Math.pow((x[i]/C),4));
-	}
-	
-	//solve dx/dy 
-	//start point - forward difference
-	dydx_u[nx_le] = (Y_af[nx_le+1]-Y_af[nx_le])/dx;
-	dydx_l[nx_le] = -(Y_af[nx_le+1]-Y_af[nx_le])/dx;
-	//general case - central difference
-	for(var i = nx_le+1; i < nx_te-1; ++i) {
-		dydx_u[i] = (Y_af[i+1]-Y_af[i-1])/(2*dx);
-		dydx_l[i] = -(Y_af[i+1]-Y_af[i-1])/(2*dx);
-	}	
-	//end point - backward difference
-	dydx_u[nx_te-1] = (Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
-	dydx_l[nx_te-1] = -(Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
-}
-
-function diamond() {
-	for(var i = nx_le; i < nx_le + (nx_te-nx_le)/2; ++i)
-	{
-		dydx_u[i] = .1;
-		dydx_l[i] = -.1;
-	}
-	for(var i = nx_le + (nx_te-nx_le)/2; i < nx_te; ++i)
-	{
-		dydx_u[i] = -.1;
-		dydx_l[i] = .1;
-	}
-}
-*/
