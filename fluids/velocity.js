@@ -8,9 +8,42 @@ var x = [];
 var y = [];
 
 function calculate(){
-    var a = document.getElementById("mach").value;
-    var b = document.getElementById("alpha").value;
-    calculateU(a, b);
+	//get values
+    var a = parseFloat(document.getElementById("mach").value);
+    var b = parseFloat(document.getElementById("alpha").value);
+
+    //test input
+    //Acceptable mach range: 0 - 2.
+    //Acceptable alpha range: 0 - 15 deg
+    var input_err = document.getElementById("input_err");
+    if(isNaN(a) || isNaN(b)) {
+    	input_err.style.display = "block";
+    	return;
+    }
+    if(a < 0 || a > 2) {
+    	//throw range error
+    	input_err.style.display = "block";
+    	return;
+    }
+    if(b < 0 || b > 15) {
+    	//throw range error
+    	input_err.style.display = "block";
+    	return;
+    }
+    input_err.style.display = "none";
+    
+    //get airfoil || display error message
+    var af_err = document.getElementById("af_err");
+    try {
+    	var airfoil = document.querySelector('#airfoil input[name="airfoil"]:checked').value;
+    } catch (e) {
+	    af_err.style.display = "block";
+    	return;
+    }
+    
+    af_err.style.display = "none";
+    
+    calculateU(airfoil, a, b);
     
     for(var j = 0; j < 100; ++j)
     {
@@ -23,9 +56,9 @@ function calculate(){
             uu[j][i] = u[i][j];
         }
     }
+    
+    plot();
 	normalizeUU();
-	
-    document.getElementById("buttons").innerHTML = "<button id=\"display\" onclick=\"plot()\">Display</button>";
 }
 
 function plot() {
@@ -52,8 +85,9 @@ function plot() {
             }
         }]
     };
-    document.getElementById("buttons").innerHTML = "<button id=\"solve\" onclick=\"calculate()\">Calculate</button>";
-    Plotly.newPlot("data", data, layout);
+    
+    Plotly.newPlot("plot", data, layout);
+    document.getElementById("plot").style.display = "block";
 }
 
 //~~~~~~~~~~~~~~~Begin Canvas Functions

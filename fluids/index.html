@@ -18,22 +18,41 @@
     </head>
     
     <body>
-        <div id="plots">
+        <div id="data">
             <div class="title">
                 <h1>Solving fluid velocity contours over a thin airfoil</h1>
                 <div class="dedication">UC Davis EAE 126, Spring 2013 - In dedication to the countless hours spent in the CAE lab in Bainer Hall with Obdulio, Alex, Edmund, and Melinda</div>
             </div>
             <div id="inputs">
                 <label for="mach">Mach Number:</label>
-                <input id="mach" type="text" value="1.4" />
+                <input id="mach" type="text" placeholder="0 < M < 2" maxlength="5" />
                 <label for="alpha">Angle of Attack (deg):</label>
-                <input id="alpha" type="text" value="1" />
+                <input id="alpha" type="text" placeholder="0 < alpha < 15" maxlength="5" />
+            </div>
+            <div id="input_err" class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Acceptable Ranges: 0 < M < 2, 0 < alpha < 15
+            </div>
+            <div id="airfoil">
+                <p>Select an airfoil:</p>
+                <input type="radio" name="airfoil" id="plate" value="plate"><label for="plate"> Flat Plate</label>
+                <input type="radio" name="airfoil" id="arc" value="arc"><label for="arc"> Circular Arc</label>
+                <input type="radio" name="airfoil" id="joukowski" value="joukowski"><label for="joukowski"> Joukowski</label>
+                <input type="radio" name="airfoil" id="biconvex" value="biconvex"><label for="biconvex"> Biconvex</label>
+                <input type="radio" name="airfoil" id="naca" value="naca"><label for="naca"> Naca 0012</label>
+                <input type="radio" name="airfoil" id="diamond" value="diamond"><label for="diamond"> 10% Diamond</label>
+            </div>
+            <div id="af_err" class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Pick an airfoil!
             </div>
             <div id="buttons">
                 <p>Warning: Might take a while for solver to finish, especially subsonic (M<1) flow</p>
                 <button id="solve" onclick="calculate();">Calculate</button>
             </div>
-            <div id="data"></div>
+            <div id="plot"></div>
         </div>
         
         <div id="flow">

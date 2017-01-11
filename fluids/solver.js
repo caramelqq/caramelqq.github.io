@@ -1,4 +1,4 @@
-function calculateU(M_inf, alpha){
+function calculateU(airfoil, M_inf, alpha){
     //CONSTANTS
     var pi = 3.14159;
     var rho = 1;
@@ -36,24 +36,78 @@ function calculateU(M_inf, alpha){
    
 	var dydx_u = [];
 	var dydx_l = [];
-	
-	//10% DIAMOND ARIFOIL
 	for(var i = 0; i < nx_te; ++i)
 	{
 		dydx_l[i] = 0;
 		dydx_u[i] = 0;
 	}
-	for(var i = nx_le; i < nx_le + (nx_te-nx_le)/2; ++i)
-	{
-		dydx_u[i] = .1;
-		dydx_l[i] = -.1;
+	
+	//Get airfoil
+	if(airfoil === 'plate') {
+		//do nothing as dydx is already set to 0
+		//var af_coords = jk_af(0, 0, n_af);
+		//solve_af_dydx(af_coords.X_af, af_coords.Y_af, nx_le, nx_te, dydx_u, dydx_l);
+	} else if (airfoil === 'arc') {
+		var af_coords = jk_af(0, 0.1, n_af);
+		solve_af_dydx(af_coords.X_af, af_coords.Y_af, nx_le, nx_te, dydx_u, dydx_l);
+		console.log()
+	} else if (airfoil === 'joukowski') {
+		var af_coords = jk_af(0.1, 0.1, n_af);
+		solve_af_dydx(af_coords.X_af, af_coords.Y_af, nx_le, nx_te, dydx_u, dydx_l);
+	} else if (airfoil === 'biconvex') {
+		var tau = 0.1;
+		var Y_af = [];
+		//solve upper surface Y
+		for(var i = nx_le; i < nx_te; ++i) {
+			Y_af[i] = 2*tau*x[i] - 2*tau*Math.pow(x[i], 2);
+			//lower airfoil Y is -Y_af
+		}
+		
+		//solve dx/dy 
+		//start point - forward difference
+		dydx_u[nx_le] = (Y_af[nx_le+1]-Y_af[nx_le])/dx;
+		dydx_l[nx_le] = -(Y_af[nx_le+1]-Y_af[nx_le])/dx;
+		//general case - central difference
+		for(var i = nx_le+1; i < nx_te-1; ++i) {
+			dydx_u[i] = (Y_af[i+1]-Y_af[i-1])/(2*dx);
+			dydx_l[i] = -(Y_af[i+1]-Y_af[i-1])/(2*dx);
+		}	
+		//end point - backward difference
+		dydx_u[nx_te-1] = (Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
+		dydx_l[nx_te-1] = -(Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
+	} else if (airfoil === 'naca') {
+		var C = 1;
+		var tau = 0.1;
+		var Y_af = [];
+		for(var i = nx_le; i < nx_te; ++i) {
+			Y_af[i] = 10*tau*C*(0.2969*Math.sqrt(x[i]/C)-0.126*(x[i]/C)-0.3537*Math.pow((x[i]/C),2)+0.2843*Math.pow((x[i]/C),3)-0.1015*Math.pow((x[i]/C),4));
+		}
+		
+		//solve dx/dy 
+		//start point - forward difference
+		dydx_u[nx_le] = (Y_af[nx_le+1]-Y_af[nx_le])/dx;
+		dydx_l[nx_le] = -(Y_af[nx_le+1]-Y_af[nx_le])/dx;
+		//general case - central difference
+		for(var i = nx_le+1; i < nx_te-1; ++i) {
+			dydx_u[i] = (Y_af[i+1]-Y_af[i-1])/(2*dx);
+			dydx_l[i] = -(Y_af[i+1]-Y_af[i-1])/(2*dx);
+		}	
+		//end point - backward difference
+		dydx_u[nx_te-1] = (Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
+		dydx_l[nx_te-1] = -(Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
+	} else if (airfoil === 'diamond') {
+		for(var i = nx_le; i < nx_le + (nx_te-nx_le)/2; ++i)
+		{
+			dydx_u[i] = .1;
+			dydx_l[i] = -.1;
+		}
+		for(var i = nx_le + (nx_te-nx_le)/2; i < nx_te; ++i)
+		{
+			dydx_u[i] = -.1;
+			dydx_l[i] = .1;
+		}
 	}
-	for(var i = nx_le + (nx_te-nx_le)/2; i < nx_te; ++i)
-	{
-		dydx_u[i] = -.1;
-		dydx_l[i] = .1;
-	}
-
+	
 	//field matrices
 	var v = [];
 	var ugs = [];
@@ -625,6 +679,117 @@ function calculateU(M_inf, alpha){
 		}
 
 		res = res_old;
-	}//END MAIN LOOP
+	}//END MAIN WHILE LOOP
 	
+} //END Calculate
+
+function solve_af_dydx(X_af, Y_af, nx_le, nx_te, dydx_u, dydx_l) {
+	for(var i = nx_le; i < nx_te; ++i) {
+		for(var j = 0; j < X_af.length-1; ++j) {
+			if(x[i] >= X_af[j] && x[i] <= X_af[j+1]) {
+				dydx_l[i] = (Y_af[j+1]-Y_af[j])/(X_af[j+1]-X_af[j]);
+			}
+		}
+		for(var j = 1; j < X_af.length; ++j) {
+			if(x[i] <= X_af[j] && x[i] >= X_af[j-1]) {
+				dydx_u[i] = (Y_af[j-1]-Y_af[j])/(X_af[j-1]-X_af[j]);
+			}
+		}
+	}
 }
+
+function jk_af(eps,mu,n_af) {
+	var panels = 2*n_af;
+	var dtheta = 2*Math.PI/(panels-1);
+	var theta = [];
+	//0:dtheta:2*pi;
+	for(var i = 0; i < panels; ++i) {
+		theta[i] = i*dtheta;
+	}
+	var r_min = 1;
+	var b = Math.sqrt(Math.pow(r_min, 2) - Math.pow(mu, 2)) - eps;
+	var x_circ = [];
+	var y_circ = [];
+	var X_af = [];
+	var Y_af = [];
+	for(var i = 0; i < theta.length; ++i) {
+        x_circ[i] = -eps+(r_min)*Math.cos(theta[i]);
+        y_circ[i] = mu+(r_min)*Math.sin(theta[i]);
+        X_af[i] = x_circ[i]*(1+Math.pow(b,2)/(Math.pow(x_circ[i], 2)+Math.pow(y_circ[i], 2)));
+        Y_af[i] = y_circ[i]*(1-Math.pow(b,2)/(Math.pow(x_circ[i], 2)+Math.pow(y_circ[i], 2)));
+	}
+	
+	var X_af_min = Math.min.apply(null, X_af);
+	var X_af_max = Math.max.apply(null, X_af);
+	var chord = X_af_max-X_af_min;
+
+	for(var i = 0; i < X_af.length; ++i) {
+		X_af[i] = (X_af[i]+Math.abs(X_af_min))/chord;
+	    Y_af[i] = Y_af[i]/chord;
+	}
+
+	return {X_af, Y_af};
+}
+/*
+
+//AIRFOIL COORDINATE GENERATION STANDALONE FUNCTIONS
+
+
+function biconvex () {
+	var tau = 0.1;
+	var Y_af = [];
+	//solve upper surface Y
+	for(var i = nx_le; i < nx_te; ++i) {
+		Y_af[i] = 2*tau*x[i] - 2*tau*Math.pow(x[i], 2);
+		//dydx_l[i] = -(2*tau*X[i] - 2*tau*Math.pow(X[i], 2));
+	}
+	
+	//solve dx/dy 
+	//start point - forward difference
+	dydx_u[nx_le] = (Y_af[nx_le+1]-Y_af[nx_le])/dx;
+	dydx_l[nx_le] = -(Y_af[nx_le+1]-Y_af[nx_le])/dx;
+	//general case - central difference
+	for(var i = nx_le+1; i < nx_te-1; ++i) {
+		dydx_u[i] = (Y_af[i+1]-Y_af[i-1])/(2*dx);
+		dydx_l[i] = -(Y_af[i+1]-Y_af[i-1])/(2*dx);
+	}	
+	//end point - backward difference
+	dydx_u[nx_te-1] = (Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
+	dydx_l[nx_te-1] = -(Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
+}
+
+function naca() {
+	var C = 1;
+	var tau = 0.1;
+	var Y_af = [];
+	for(var i = nx_le; i < nx_te; ++i) {
+		Y_af[i] = 10*tau*C*(0.2969*Math.sqrt(x[i]/C)-0.126*(x[i]/C)-0.3537*Math.pow((x[i]/C),2)+0.2843*Math.pow((x[i]/C),3)-0.1015*Math.pow((x[i]/C),4));
+	}
+	
+	//solve dx/dy 
+	//start point - forward difference
+	dydx_u[nx_le] = (Y_af[nx_le+1]-Y_af[nx_le])/dx;
+	dydx_l[nx_le] = -(Y_af[nx_le+1]-Y_af[nx_le])/dx;
+	//general case - central difference
+	for(var i = nx_le+1; i < nx_te-1; ++i) {
+		dydx_u[i] = (Y_af[i+1]-Y_af[i-1])/(2*dx);
+		dydx_l[i] = -(Y_af[i+1]-Y_af[i-1])/(2*dx);
+	}	
+	//end point - backward difference
+	dydx_u[nx_te-1] = (Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
+	dydx_l[nx_te-1] = -(Y_af[nx_te-1]=Y_af[nx_te-2])/dx;
+}
+
+function diamond() {
+	for(var i = nx_le; i < nx_le + (nx_te-nx_le)/2; ++i)
+	{
+		dydx_u[i] = .1;
+		dydx_l[i] = -.1;
+	}
+	for(var i = nx_le + (nx_te-nx_le)/2; i < nx_te; ++i)
+	{
+		dydx_u[i] = -.1;
+		dydx_l[i] = .1;
+	}
+}
+*/
