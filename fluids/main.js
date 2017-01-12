@@ -4,86 +4,83 @@ var x = [];
 var y = [];
 
 function calculate(){
-    //get values
-    var a = parseFloat(document.getElementById("mach").value);
-    var b = parseFloat(document.getElementById("alpha").value);
+	//get values
+	var a = parseFloat(document.getElementById("mach").value);
+	var b = parseFloat(document.getElementById("alpha").value);
 
-    //test input
-    //Acceptable mach range: 0 - 2.
-    //Acceptable alpha range: 0 - 15 deg
-    var input_err = document.getElementById("input_err");
-    if(isNaN(a) || isNaN(b)) {
-    	input_err.style.display = "block";
-    	return;
-    }
-    if(a < 0 || a > 2) {
-    	//throw range error
-    	input_err.style.display = "block";
-    	return;
-    }
-    if(b < 0 || b > 15) {
-    	//throw range error
-    	input_err.style.display = "block";
-    	return;
-    }
-    input_err.style.display = "none";
-    
-    //get airfoil || display error message
-    var af_err = document.getElementById("af_err");
-    try {
-    	var airfoil = document.querySelector('#airfoil input[name="airfoil"]:checked').value;
-    } catch (e) {
-	af_err.style.display = "block";
-    	return;
-    }
-    
-    af_err.style.display = "none";
-    
-    calculateU(airfoil, a, b);
-    
-    for(var j = 0; j < 100; ++j)
-    {
-        uu[j] = [];
-    }
-    for(var i = 0; i < 160; ++i)
-    {
-        for(var j = 0; j < 100; ++j)
-        {
-            uu[j][i] = u[i][j];
-        }
-    }
-    
-    plot();
-    normalizeUU();
+	//test input
+	//Acceptable mach range: 0 - 2.
+	//Acceptable alpha range: 0 - 15 deg
+	var input_err = document.getElementById("input_err");
+	if(isNaN(a) || isNaN(b)) {
+		input_err.style.display = "block";
+		return;
+	}
+	if(a < 0 || a > 2) {
+		//throw range error
+		input_err.style.display = "block";
+		return;
+	}
+	if(b < 0 || b > 15) {
+		//throw range error
+		input_err.style.display = "block";
+		return;
+	}
+	input_err.style.display = "none";
+
+	//get airfoil || display error message
+	var af_err = document.getElementById("af_err");
+	try {
+		var airfoil = document.querySelector('#airfoil input[name="airfoil"]:checked').value;
+	} catch (e) {
+		af_err.style.display = "block";
+		return;
+	}
+
+	af_err.style.display = "none";
+
+	calculateU(airfoil, a, b);
+
+	for(var j = 0; j < 100; ++j) {
+		uu[j] = [];
+	}
+	for(var i = 0; i < 160; ++i) {
+		for(var j = 0; j < 100; ++j) {
+	    		uu[j][i] = u[i][j];
+		}
+	}
+
+	plot();
+	normalizeUU();
 }
 
 function plot() {
-    var data = [ {
+	var data = [ {
 		    z: uu,
 		    x: x,
 		    y: y,
 		    type: "heatmap",
 		    colorscale: "Jet"
 	    }
-    ];
+	];
 
-    var layout = {
-      title: "Mach Distribution U: M<sub>∞</sub> = " + document.getElementById("mach").value + ", α = " + document.getElementById("alpha").value + "°",
-      shapes: [{
-          type: "line",
-          x0: x[40],
-          y0: 0,
-          x1: x[59],
-          y1: 0,
-          line: {
-            color: "rgb(255, 255, 255)",
-            width: 2
-            }
-        }]
-    };
+	var layout = {
+		title: "Mach Distribution U: M<sub>∞</sub> = " + document.getElementById("mach").value + ", α = " + document.getElementById("alpha").value + "°",
+		shapes: [{
+		  type: "line",
+		  x0: x[40],
+		  y0: 0,
+		  x1: x[59],
+		  y1: 0,
+		  line: {
+		    color: "rgb(255, 255, 255)",
+		    width: 2
+		    }
+		}]
+	};
     
-    Plotly.newPlot("plot", data, layout);
-    document.getElementById("plot").style.display = "block";
+	Plotly.newPlot("plot", data, layout);
+	document.getElementById("plot").style.display = "block";
 }
 
 //~~~~~~~~~~~~~~~Begin Canvas Functions
@@ -96,13 +93,13 @@ var frameCount = 0;
 var run = false;
 
 function init() {
-    ctx.fillStyle = '#F6F6F6';
-    ctx.fillRect(0, 0, 800,500);
+	ctx.fillStyle = '#F6F6F6';
+	ctx.fillRect(0, 0, 800,500);
 
-    drawAirfoil();
-    createPoints();
-	
-    requestAnimationFrame(draw);
+	drawAirfoil();
+	createPoints();
+
+	requestAnimationFrame(draw);
 }
 
 function drawAirfoil() {
@@ -126,8 +123,8 @@ function normalizeUU() {
 		}
 	}
 	
-    for(var j = 0; j < y.length; ++j) {
-        for(var i = 0; i < x.length; ++i) {
+	for(var j = 0; j < y.length; ++j) {
+		for(var i = 0; i < x.length; ++i) {
 			uu[j][i] += Math.abs(min);
 			uu[j][i] += 0.015;
 			//normalize and scale to .25 speed
@@ -137,10 +134,10 @@ function normalizeUU() {
 }
 
 function Point(pointX, pointY, pointU) {
-    this.pointX = pointX;
-    this.pointY = y.length - 1 - pointY;
-    this.pointU = pointU;
-    this.pointColor = "#FFFFFF";
+	this.pointX = pointX;
+	this.pointY = y.length - 1 - pointY;
+	this.pointU = pointU;
+	this.pointColor = "#FFFFFF";
 }
 
 Point.prototype.draw = function (ctx) {
@@ -158,13 +155,13 @@ Point.prototype.update = function() {
 }
 
 function createPoints() {
-    for(var j = 0; j < y.length; j+=2) {
-	points[j/2] = [];
-        for(var i = 0; i < x.length; i+=2) {
-		points[j/2][i/2] = new Point(i, j, uu[j][i]);
-		points[j/2][i/2].draw(ctx);
-        }
-    }
+	for(var j = 0; j < y.length; j+=2) {
+		points[j/2] = [];
+		for(var i = 0; i < x.length; i+=2) {
+			points[j/2][i/2] = new Point(i, j, uu[j][i]);
+			points[j/2][i/2].draw(ctx);
+		}
+	}
 }
 
 canvas.addEventListener("click", function(e) {
@@ -187,39 +184,39 @@ function drawError() {
 
 function draw() {
 	if(run == true) {
-	    ctx.clearRec
-	    ctx.fillStyle = '#000000';
-	    ctx.fillRect(0, 0, 800,500);
-	
-	    //draw airfoil
-	    drawAirfoil();
-		
-	    for(var i = 0; i < points[0].length; ++i) {
-		count[i] = 0;
-	    }
-		
-	    //update particle positions and draw
-	    for(var j = 0; j < points.length; j++) {
-	        for(var i = 0; i < points[j].length; i++) {
-			//update position
-			points[j][i].update();
+		ctx.clearRec
+		ctx.fillStyle = '#000000';
+		ctx.fillRect(0, 0, 800,500);
 
-			//determine and count updated points out of bounds
-			if(isNaN(points[j][i].pointX) && i > 80) {
-				points[j].pop();
-			} else {
-				points[j][i].draw(ctx);
-			}
-	        }
-	    }
-		
-	    if(frameCount % 20 === 0) {
-		for(var j = 0; j < points.length; ++j) {
-			points[j].unshift(new Point(0, 2*j, uu[j][0]));
+		//draw airfoil
+		drawAirfoil();
+
+		for(var i = 0; i < points[0].length; ++i) {
+			count[i] = 0;
 		}
-		frameCount = 0;
-	    }
-	    ++frameCount;
+
+		//update particle positions and draw
+		for(var j = 0; j < points.length; j++) {
+			for(var i = 0; i < points[j].length; i++) {
+				//update position
+				points[j][i].update();
+
+				//determine and count updated points out of bounds
+				if(isNaN(points[j][i].pointX) && i > 80) {
+					points[j].pop();
+				} else {
+					points[j][i].draw(ctx);
+				}
+			}
+		}
+
+		if(frameCount % 20 === 0) {
+			for(var j = 0; j < points.length; ++j) {
+				points[j].unshift(new Point(0, 2*j, uu[j][0]));
+			}
+			frameCount = 0;
+		}
+		++frameCount;
 	}
 	requestAnimationFrame(draw);
 }
