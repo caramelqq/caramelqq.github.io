@@ -4,7 +4,7 @@ var x = [];
 var y = [];
 
 function calculate(){
-	//get values
+    //get values
     var a = parseFloat(document.getElementById("mach").value);
     var b = parseFloat(document.getElementById("alpha").value);
 
@@ -33,7 +33,7 @@ function calculate(){
     try {
     	var airfoil = document.querySelector('#airfoil input[name="airfoil"]:checked').value;
     } catch (e) {
-	    af_err.style.display = "block";
+	af_err.style.display = "block";
     	return;
     }
     
@@ -54,7 +54,7 @@ function calculate(){
     }
     
     plot();
-	normalizeUU();
+    normalizeUU();
 }
 
 function plot() {
@@ -99,8 +99,8 @@ function init() {
     ctx.fillStyle = '#F6F6F6';
     ctx.fillRect(0, 0, 800,500);
 
-	drawAirfoil();
-	createPoints();
+    drawAirfoil();
+    createPoints();
 	
     requestAnimationFrame(draw);
 }
@@ -159,10 +159,10 @@ Point.prototype.update = function() {
 
 function createPoints() {
     for(var j = 0; j < y.length; j+=2) {
-		points[j/2] = [];
+	points[j/2] = [];
         for(var i = 0; i < x.length; i+=2) {
-			points[j/2][i/2] = new Point(i, j, uu[j][i]);
-			points[j/2][i/2].draw(ctx);
+		points[j/2][i/2] = new Point(i, j, uu[j][i]);
+		points[j/2][i/2].draw(ctx);
         }
     }
 }
@@ -191,35 +191,35 @@ function draw() {
 	    ctx.fillStyle = '#000000';
 	    ctx.fillRect(0, 0, 800,500);
 	
-		//draw airfoil
-		drawAirfoil();
+	    //draw airfoil
+	    drawAirfoil();
 		
-		for(var i = 0; i < points[0].length; ++i) {
-			count[i] = 0;
+	    for(var i = 0; i < points[0].length; ++i) {
+		count[i] = 0;
 	    }
 		
-		//update particle positions and draw
+	    //update particle positions and draw
 	    for(var j = 0; j < points.length; j++) {
 	        for(var i = 0; i < points[j].length; i++) {
-				//update position
-				points[j][i].update();
-				
-				//determine and count updated points out of bounds
-				if(isNaN(points[j][i].pointX) && i > 80) {
-					points[j].pop();
-				} else {
-	            	points[j][i].draw(ctx);
-				}
+			//update position
+			points[j][i].update();
+
+			//determine and count updated points out of bounds
+			if(isNaN(points[j][i].pointX) && i > 80) {
+				points[j].pop();
+			} else {
+				points[j][i].draw(ctx);
+			}
 	        }
 	    }
 		
-		if(frameCount % 20 === 0) {
-			for(var j = 0; j < points.length; ++j) {
-				points[j].unshift(new Point(0, 2*j, uu[j][0]));
-			}
-			frameCount = 0;
+	    if(frameCount % 20 === 0) {
+		for(var j = 0; j < points.length; ++j) {
+			points[j].unshift(new Point(0, 2*j, uu[j][0]));
 		}
-		++frameCount;
+		frameCount = 0;
+	    }
+	    ++frameCount;
 	}
 	requestAnimationFrame(draw);
 }
