@@ -1,11 +1,11 @@
 function calculateU(airfoil, M_inf, alpha){
-    //CONSTANTS
-    var pi = 3.14159;
-    var rho = 1;
+	//CONSTANTS
+	var pi = 3.14159;
+	var rho = 1;
 	var v_inf = 1;
 	var gamma = 1.4;	
 	var gamma2 = 0;
-    alpha = alpha*pi/180;
+	alpha = alpha*pi/180;
     
 	//GRID - airfoil
 	var n_af = 20;
