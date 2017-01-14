@@ -21,6 +21,17 @@ body .resume-container table th
 	text-align: left;
 }
 
+#projects
+{
+	margin: 10px auto;
+	background-color: #f7f8f9;
+}
+
+#projects li
+{
+	display: inline;
+}
+
 .section-name
 {
 	text-align: left;
