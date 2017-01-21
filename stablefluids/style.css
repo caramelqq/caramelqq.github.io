@@ -1,0 +1,16 @@
+body 
+{
+    text-align: center;
+    font-family: sans-serif;
+}
+
+#canvas
+{
+    border: 1px solid black;
+}
+
+#method
+{
+    width: 1000px;
+    margin: 30px auto;
+}

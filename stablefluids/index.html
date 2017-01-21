@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" /> 
+        <script src="./solver.js" defer></script>
+        <script src="./main.js" defer></script>
+        <link rel="stylesheet" href="./style.css" />  
+        
+        <!-- Bootstrap imports-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        
+    </head>
+    <body>
+        <h1>Stable Fluids</h1>
+        <canvas id="canvas" width="800px" height="800px">Your browser does not support html5! :(</canvas>
+        <div id="method">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                      <a data-toggle="collapse" href="#collapse1">Methodology</a>
+                  </h4>
+              </div>
+              <div id="collapse1" class="panel-collapse collapse">
+                  <div class="panel-body">
+                        <a href="http://www.dgp.toronto.edu/people/stam/reality/Research/pub.html">Jos Stam, "Real-Time Fluid Dynamics for Games"</a><br>
+                        <a href="https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/">Paul Rouget - Faster canvas rendering</a><br>
+                        <a href="https://github.com/topaz1008/canvas-fluid-solver">Topaz's implementation</a>
+                  </div>
+              </div>
+          </div>
+    </body>
+</html>
