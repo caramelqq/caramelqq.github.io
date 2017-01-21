@@ -229,50 +229,50 @@ Field.prototype.setBnd = function(b, x)
 
 Field.prototype.draw = function()
 {
-	for(var i = 1; i <= this.n; i++) 
-	{
-		for(var j = 1; j <= this.n; j++) 
-		{
-    		var h = Math.sqrt(this.u[i][j]*this.u[i][j] + this.v[i][j]*this.v[i][j])*3+.33;
-    		var s = 1;
-    		var lum = this.rho[i][j]*20;
-    		if(h < .33)
-    		{
-    			h = .33;
-    		}
-    		if(h > 1)
-    		{
-    			h = 1;
-    		}
-    		if(lum > 0.5)
-    		{
-    			lum = 0.5;
-    		}
-    		var colors = hslToRgb(h, s, lum);
-    					
-    		var r = colors[0];
-    		var g = colors[1];
-    		var b = colors[2];	
-    
-    		//draw each square pixel by pixel. Faster
-    		//https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
-    		for (var k = 0; k < sq_len; k++)
-    		{
-    			for (var l = 0; l < sq_len; l++) 
-    			{
-    				var px = (i - 1) * sq_len + k;
-    				var py = (j - 1) * sq_len + l;
-    				var m = (px + py*canvas.width) * 4;
-    
-    				buffer.data[m] = r;
-    				buffer.data[m+1] = g;
-    				buffer.data[m+2] = b;
-    				buffer.data[m+3] = 255;
-    			}
-    		}
-    		
-    		//Damp rho
-    		this.rho[i][j] *= 0.98;
+    for(var i = 1; i <= this.n; i++) 
+    {
+        for(var j = 1; j <= this.n; j++) 
+        {
+            var h = Math.sqrt(this.u[i][j]*this.u[i][j] + this.v[i][j]*this.v[i][j])*3+.33;
+            var s = 1;
+            var lum = this.rho[i][j]*20;
+            if(h < .33)
+            {
+            	h = .33;
+            }
+            if(h > 1)
+            {
+            	h = 1;
+            }
+            if(lum > 0.5)
+            {
+            	lum = 0.5;
+            }
+            var colors = hslToRgb(h, s, lum);
+            			
+            var r = colors[0];
+            var g = colors[1];
+            var b = colors[2];	
+            
+            //draw each square pixel by pixel. Faster
+            //https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
+            for (var k = 0; k < sq_len; k++)
+            {
+                for (var l = 0; l < sq_len; l++) 
+                {
+                    var px = (i - 1) * sq_len + k;
+                    var py = (j - 1) * sq_len + l;
+                    var m = (px + py*canvas.width) * 4;
+                    
+                    buffer.data[m] = r;
+                    buffer.data[m+1] = g;
+                    buffer.data[m+2] = b;
+                    buffer.data[m+3] = 255;
+                }
+            }
+            
+            //Damp rho
+            this.rho[i][j] *= 0.98;
 		}
 	}
 }
