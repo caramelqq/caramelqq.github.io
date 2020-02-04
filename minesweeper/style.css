@@ -1,0 +1,23 @@
+body
+{
+	font-family: sans-serif;
+	font-size: 12pt;
+}
+
+.name {
+	text-align: center;
+}
+
+.body-container {
+	width: auto;
+}
+
+.picture-container {
+	text-align: center;
+}
+
+.textblock {
+	text-align: left;
+	width: 810px;
+	margin: auto;
+}

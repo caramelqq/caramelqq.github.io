@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8" /> 
+		<link rel="stylesheet" href="./style.css">  
+		<title>Minesweeper</title>
+	</head>
+	<body>
+		<div class="body-container">
+			<h1 class="name">Reversing Minesweeper with DLL Injection</h1>
+			<div class="picture-container" align="left">
+				<img class="fit-picture" src="./minesweeper.gif" alt="Totally Legit">
+			</div>
+			<div class="textblock">
+				<p>Having played minesweeper for countless hours, I decided to poke around one day to see how it worked underneath the hood.  After using IDA and Ollydbg and setting many, many breakpoints in a dynamic analysis, I found that the location of the minefield was at the address 0x01005340.  
+				</p>
+				<p>This minefield was stored contigiously in a 1 kilobyte block of memory.  However, depending on the difficulty settings, not necessarily all of the memory is in use.  The "bounds" (the memory not in use) of the minefield are marked as 0x10 in this field.  When a player clicks on a square, the byte corresponding to that square is AND with with 0x80, and if the result is not 0, the square represents a mine.
+				</p>
+				<p>So how exactly does one win at minesweeper?  The game is over when the number of squares left in play is equal to the number of mines present.  One could patch the game in such a way that the winning subroutine gets triggered by a click, a keystroke, etc.  This may be unreliable as the game may be setting certain variables and parameters during the course of normal gameplay, and the game may crash if these variables aren't set or do not exist.  Therefore, I took a less invasive approach - I set the values of the mines in the field to 0x8E, which meant that there was a flag on the square.  If a square is marked with a flag, the game does not allow you to click on it to reveal what's underneath.  I then sent a mouse down signal to every square.  All squares that do not have a mine are revealed, and the game is won as the number of squares in play is equal to the total amount of mines in play.
+				</p>
+				<p>So how does one instantly win at minesweeper without breaking open the debuggers every time?  Enter DLL injection.  This is a technique which allows for a DLL file to be loaded into a host process by another process.  The DLL file can contain additional functions that may provide additional functionality to the program.  the The Windows API actually provides a function to do this with CreateRemoteThread.  Surprisingly, no permissions are required to use this function either.  The injector first finds the PID on the program of interest and obtains a handle to the program.  A program can load a DLL using the LoadLibraryA function.  Thus, using CreateRemoteThread, a thread running LoadLibraryA can be initialized within minesweeper, which then loads our DLL into minesweeper's address space.  Once this happens, we only need to trigger the solve function by clicking a button. :)
+				</p>
+			</div>
+		</div>
+	</body>
+</html>
